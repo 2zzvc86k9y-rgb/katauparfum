@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load price_tags %}
+
+{% block title %}Produits - KATAUPARFUM{% endblock %}
+
+{% block content %}
+<!-- Page Hero -->
+<section class="hero-section">
+    <div class="hero-content">
+        <p class="text-amber-300 text-xs sm:text-sm tracking-widest uppercase font-semibold mb-2 sm:mb-4">
+            ✦ Notre Collection ✦
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-bold mb-3 sm:mb-4">Tous les Produits</h1>
+        <p class="text-gray-300 text-sm sm:text-lg">Découvrez notre sélection complète de parfums et huiles exclusifs</p>
+    </div>
+</section>
+
+<div class="luxury-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Sidebar: Filtres -->
+        <aside class="lg:col-span-1">
+            <!-- Catégories Mobile (Défilement Horizontal) -->
+            <div class="lg:hidden mb-6 overflow-x-auto pb-2 -mx-4 px-4 flex gap-3 no-scrollbar" style="-webkit-overflow-scrolling: touch;">
+                <a href="{% url 'shop:products' %}" 
+                   class="whitespace-nowrap px-5 py-2 rounded-full border transition text-sm font-bold shadow-sm {% if not selected_category %}bg-amber-400 text-black border-amber-400{% else %}bg-white text-gray-600 border-gray-200{% endif %}">
+                   Tous
+                </a>
+                {% for category in categories %}
+                <a href="{% url 'shop:products' %}?category={{ category.slug }}" 
+                   class="whitespace-nowrap px-5 py-2 rounded-full border transition text-sm font-bold shadow-sm {% if selected_category and selected_category.id == category.id %}bg-amber-400 text-black border-amber-400{% else %}bg-white text-gray-600 border-gray-200{% endif %}">
+                   {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- Index Alphabétique Mobile (Accordeon Déroulant) -->
+            <div class="lg:hidden mb-8">
+                <details class="group bg-white border border-amber-200 rounded-lg overflow-hidden shadow-sm">
+                    <summary class="flex items-center justify-between p-4 cursor-pointer bg-amber-50 font-semibold text-amber-900 list-none [&::-webkit-details-marker]:hidden">
+                        <span><i class="fas fa-sort-alpha-down mr-2"></i> Liste des produits (A-Z)</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300 group-open:rotate-180"></i>
+                    </summary>
+                    <div class="max-h-60 overflow-y-auto p-0 bg-white custom-scrollbar border-t border-amber-100 relative">
+                        {% regroup all_products_sidebar by name.0|upper as products_by_letter %}
+                        {% for letter in products_by_letter %}
+                        <div class="sticky top-0 z-10 bg-amber-100 text-amber-800 px-4 py-1 text-xs font-bold border-b border-amber-200 shadow-sm">
+                            {{ letter.grouper }}
+                        </div>
+                        {% for p in letter.list %}
+                        <a href="{% url 'shop:products' %}?product_id={{ p.id }}" 
+                           class="block px-4 py-3 border-b border-gray-50 last:border-0 text-sm hover:bg-amber-50 transition {% if request.GET.product_id|add:'0' == p.id %}text-amber-700 font-bold bg-amber-50{% else %}text-gray-600{% endif %}">
+                            {{ p.name }}
+                        </a>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </details>
+            </div>
+
+            <!-- Sidebar Desktop (Masquée sur mobile) -->
+            <div class="premium-card sticky top-24 hidden lg:block">
+                <h2 class="text-xl font-bold gold-accent mb-6 flex items-center">
+                    <i class="fas fa-filter mr-3"></i> Filtres
+                </h2>
+                
+                <form method="get" action="{% url 'shop:products' %}" class="mb-6">
+                    <div class="flex gap-2">
+                        <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Chercher..." class="flex-grow px-3 py-2 border-2 border-gray-200 rounded-lg text-sm focus:border-amber-400">
+                        <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-black font-bold px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Categories Filter -->
+                <div class="mb-8">
+                    <h3 class="font-semibold text-gray-900 mb-4 text-sm uppercase tracking-wide">Catégories</h3>
+                    <div class="space-y-2">
+                        <a href="{% url 'shop:products' %}" 
+                           class="block p-3 rounded-lg transition text-sm {% if not selected_category %}bg-amber-100 border-l-4 border-amber-400 font-semibold text-amber-900{% else %}hover:bg-gray-100 text-gray-700{% endif %}">
+                            Tous les produits
+                        </a>
+                        
+                        {% for category in categories %}
+                        <a href="{% url 'shop:products' %}?category={{ category.slug }}" 
+                            class="block p-3 rounded-lg transition text-sm {% if selected_category and selected_category.id == category.id %}bg-amber-100 border-l-4 border-amber-400 font-semibold text-amber-900{% else %}hover:bg-gray-100 text-gray-700{% endif %}">
+                            {{ category.name }}
+                            <span class="text-gray-500 text-xs">({{ category.products.count }})</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Alphabetical Product List -->
+                <div class="mb-8 border-t border-gray-100 pt-6">
+                    <h3 class="font-semibold text-gray-900 mb-4 text-sm uppercase tracking-wide">
+                        Liste des produits par ordre alphabétique(A-Z)
+                    </h3>
+                    <div class="space-y-1 max-h-80 overflow-y-auto pr-1 custom-scrollbar relative">
+                        {% regroup all_products_sidebar by name.0|upper as products_by_letter %}
+                        {% for letter in products_by_letter %}
+                        <div class="sticky top-0 z-10 bg-white text-amber-600 px-2 py-1 text-xs font-bold border-b border-amber-100 mt-2 first:mt-0">
+                            {{ letter.grouper }}
+                        </div>
+                        {% for p in letter.list %}
+                        <a href="{% url 'shop:products' %}?product_id={{ p.id }}" 
+                           class="block px-3 py-2 rounded-md transition text-xs font-medium truncate group flex items-center justify-between {% if request.GET.product_id|add:'0' == p.id %}text-amber-700 bg-amber-50 font-bold{% else %}text-gray-500 hover:bg-gray-50 hover:text-amber-600{% endif %}">
+                            <span>{{ p.name }}</span>
+                            <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Info Box -->
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg border-2 border-amber-200">
+                    <p class="text-sm text-amber-900 font-medium">
+                        <i class="fas fa-truck text-amber-600 mr-2"></i>
+                        Service de livraison disponible
+                    </p>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content: Products Grid -->
+        <main class="lg:col-span-3">
+            {% if products %}
+            <div class="mb-8 pb-6 border-b-2 border-amber-200">
+                <p class="text-gray-600 font-medium">
+                    {% if selected_category %}
+                        Affichage de <strong class="text-amber-700">{{ products.count }}</strong> produit{{ products.count|pluralize }} dans 
+                        <span class="category-badge">{{ selected_category.name }}</span>
+                    {% else %}
+                        <strong class="text-amber-700">{{ products.count }}</strong> produit{{ products.count|pluralize }} disponible{{ products.count|pluralize }}
+                    {% endif %}
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for product in products %}
+                <div class="premium-card p-0 overflow-hidden">
+                    <!-- Image -->
+                    <div class="relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 h-80">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                             class="w-full h-full object-cover product-image hover:scale-110 transition-transform duration-500">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-gray-200 to-gray-300">
+                            💎
+                        </div>
+                        {% endif %}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <!-- Availability Badge -->
+                        <div class="absolute top-4 left-4">
+                            <span class="category-badge">{{ product.category.name }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="p-6">
+                        <!-- Name -->
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                            {{ product.name }}
+                        </h3>
+                        
+                        <!-- Description -->
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2 h-10">
+                            {{ product.description }}
+                        </p>
+                        
+                        <!-- Divider -->
+                        <div class="divider-luxury opacity-50 mb-4"></div>
+                        
+                        <!-- Price & Status -->
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="price-tag text-2xl">{{ product.price|display_price }} {{ CURRENCY }}</span>
+                            {% if product.is_available %}
+                            <span class="text-green-600 text-xs font-bold uppercase tracking-wide">✓ Stock</span>
+                            {% else %}
+                            <span class="text-red-600 text-sm font-semibold">✗ Rupture</span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Button -->
+                        {% if product.is_available %}
+                        <button data-product-id="{{ product.id }}" data-product-name="{{ product.name|escapejs }}" 
+                                class="btn-luxury w-full text-center block add-to-cart font-semibold">
+                            <i class="fas fa-shopping-bag mr-2"></i> Ajouter au Panier
+                        </button>
+                        {% else %}
+                        <button disabled class="w-full py-2 bg-gray-300 text-gray-600 rounded-lg font-semibold cursor-not-allowed">
+                            Indisponible
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-20">
+                <div class="text-6xl mb-6">📭</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Aucun produit trouvé</h3>
+                <p class="text-gray-600 mb-8">
+                    {% if selected_category %}
+                        Aucun produit disponible dans cette catégorie pour le moment.
+                    {% else %}
+                        Aucun produit disponible pour le moment.
+                    {% endif %}
+                </p>
+                <a href="{% url 'shop:products' %}" class="btn-luxury inline-block">
+                    Retour aux Produits
+                </a>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+
+<style>
+    /* Style discret pour la barre de défilement de la liste */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #d4af37;
+        border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #b8941e;
+    }
+</style>
+{% endblock %}

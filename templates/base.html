@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+{% load price_tags %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}KATAUPARFUM - Parfums de Luxe{% endblock %}</title>
+    <link rel="icon" type="image/png" href="/static/img/favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(180deg, #faf8f3 0%, #f4ede4 50%, #faf8f3 100%);
+            background-attachment: fixed;
+            position: relative;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .site-logo, .section-title, .price-tag, .hero-section h1 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(212, 175, 55, 0.03) 2px, rgba(212, 175, 55, 0.03) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(212, 175, 55, 0.03) 2px, rgba(212, 175, 55, 0.03) 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .luxury-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+        
+        .gold-accent {
+            color: #d4af37;
+        }
+        
+        .gold-border {
+            border-color: #d4af37;
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+            border-radius: 4px; /* Bordures moins rondes pour plus de sérieux */
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Ombre plus douce */
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-image {
+            height: 100%; /* Remplit toute la hauteur du cadre (320px) */
+            width: 100%;
+            object-fit: contain; /* Affiche l'image ENTIÈRE sans jamais couper */
+            padding: 0;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            transition: transform 0.7s ease; /* Animation lente et fluide */
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05); /* Zoom subtil sur l'image au survol */
+        }
+        
+        .btn-luxury {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            border-radius: 2px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 13px;
+        }
+        
+        .btn-luxury:hover {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941e 100%);
+            color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        /* Hero Button - Special styling for dark background */
+        .hero-section .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid #d4af37;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .hero-section .btn-secondary:hover {
+            background: #d4af37;
+            color: #1a1a1a;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+                header {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #d4af37;
+            color: #1a1a1a;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .cart-icon-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease-out;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .category-badge {
+            display: inline-block;
+            background: #d4af37;
+            color: #1a1a1a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .price-tag {
+            font-size: 24px;
+            font-weight: 600;
+            color: #d4af37;
+        }
+        
+        input, textarea, select {
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            padding: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        .section-title {
+            font-size: 28px; /* Plus petit sur mobile */
+            font-weight: 400; /* Plus fin = plus élégant */
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 16px;
+            letter-spacing: 1px;
+        }
+        
+        @media (min-width: 640px) {
+            .section-title {
+                font-size: 36px;
+            }
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37 0%, #b8941e 50%, #d4af37 100%);
+            border-radius: 2px;
+        }
+
+        /* Luxury Section Styles */
+        .luxury-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 248, 243, 0.95) 100%);
+            padding: 40px 20px;
+            margin: 30px 0;
+            border-radius: 12px;
+            position: relative;
+            border-left: 4px solid #d4af37;
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.1), 0 0 0 1px rgba(212, 175, 55, 0.05);
+        }
+
+        .luxury-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37 0%, transparent 50%, #d4af37 100%);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .site-logo {
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        header .logo-img {
+            height: 60px;
+        }
+
+        @media (min-width: 640px) {
+            header .logo-img {
+                height: 80px;
+            }
+        }
+        
+/* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.75) 0%, rgba(45, 45, 45, 0.75) 100%),
+                        url('/static/img/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            border-bottom: 3px solid #d4af37;
+            min-height: auto;
+        }
+
+        @media (min-width: 640px) {
+            .hero-section {
+                padding: 80px 20px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .hero-section {
+                padding: 100px 20px;
+                background-attachment: fixed;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-section h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+
+        @media (min-width: 640px) {
+            .hero-section h1 {
+                font-size: 48px;
+                margin-bottom: 16px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .hero-section h1 {
+                font-size: 64px;
+            }
+        }
+
+        .hero-section p {
+            font-size: 16px;
+            color: #d4af37;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            font-style: italic;
+        }
+
+        @media (min-width: 640px) {
+            .hero-section p {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .hero-section p {
+                font-size: 20px;
+                margin-bottom: 24px;
+            }
+        }
+
+        /* Luxury Pattern Background */
+        .luxury-pattern {
+            position: relative;
+            background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
+        }
+
+        .luxury-pattern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(212, 175, 55, 0.03) 2px, rgba(212, 175, 55, 0.03) 4px);
+            pointer-events: none;
+        }
+
+        /* Premium Section Background */
+        .premium-section {
+            background: linear-gradient(180deg, #ffffff 0%, #fafaf8 100%);
+            position: relative;
+        }
+
+        .premium-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .premium-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Elegant Divider */
+        .divider-luxury {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #d4af37 25%, #d4af37 75%, transparent 100%);
+            margin: 40px auto;
+            width: 200px;
+        }
+
+        /* Card with Premium Border */
+        .premium-card {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            background: white;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #d4af37 0%, rgba(212, 175, 55, 0) 100%);
+        }
+
+        .premium-card:hover {
+            border-color: #d4af37;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+        }
+
+        /* Decorative Gold Line */
+        .gold-line {
+            display: inline-block;
+            width: 40px;
+            height: 1px;
+            background: #d4af37;
+            margin: 0 12px;
+            vertical-align: middle;
+        }
+        
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        footer a {
+            color: #d4af37;
+            transition: all 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: white;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 50%;
+            margin-right: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: #d4af37;
+            color: #1a1a1a;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c00;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #c00;
+            margin-bottom: 16px;
+        }
+        
+        .success-message {
+            background: #efe;
+            color: #070;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #070;
+            margin-bottom: 16px;
+        }
+        
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="main-content">
+    <!-- Header -->
+    <header class="luxury-gradient text-white py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+                <!-- Logo -->
+                <div class="col-span-1">
+                    <a href="{% url 'shop:home' %}" class="flex items-center space-x-3">
+                        <img src="/static/img/logo.png" alt="KATAUPARFUM" class="logo-img">
+                        <span class="text-lg sm:text-2xl font-bold gold-accent site-logo">KAT AU PARFUM</span>
+                    </a>
+                </div>
+                
+                <!-- Navigation (desktop) -->
+                <nav class="hidden sm:flex col-span-1 justify-center items-center space-x-6">
+                    <a href="{% url 'shop:home' %}" class="hover:text-amber-300 transition uppercase tracking-widest text-sm font-medium">Accueil</a>
+                    <a href="{% url 'shop:products' %}" class="hover:text-amber-300 transition uppercase tracking-widest text-sm font-medium">Produits</a>
+                    <a href="#" onclick="openSocialModal(event)" class="hover:text-amber-300 transition uppercase tracking-widest text-sm font-medium">Réseaux</a>
+                </nav>
+
+                <!-- Search + Cart (desktop right) -->
+                <div class="col-span-1 flex items-center gap-4 justify-end">
+                    <!-- Search (desktop) -->
+                    <form method="get" action="{% url 'shop:products' %}" class="hidden sm:flex">
+                        <input type="text" name="q" placeholder="Rechercher..." value="{{ request.GET.q|default:'' }}" class="px-3 py-2 rounded-l-md border w-40 text-sm">
+                        <button type="submit" class="bg-amber-300 text-black px-3 py-2 rounded-r-md font-semibold text-sm hover:bg-amber-400">OK</button>
+                    </form>
+                    
+                    <!-- Cart Icon -->
+                    <a href="{% url 'shop:view_cart' %}" class="cart-icon-wrapper">
+                        <i class="fas fa-shopping-bag text-2xl hover:text-amber-300 transition"></i>
+                        {% if cart_count %}
+                        <span class="cart-badge">{{ cart_count }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar (visible only on small screens) -->
+            <div class="sm:hidden mt-4">
+                <form method="get" action="{% url 'shop:products' %}" class="flex">
+                    <input type="text" name="q" placeholder="Rechercher un produit..." value="{{ request.GET.q|default:'' }}" class="flex-grow px-3 py-2 rounded-l-md border text-sm text-black">
+                    <button type="submit" class="bg-amber-300 text-black px-4 py-2 rounded-r-md font-semibold text-sm hover:bg-amber-400"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Barre de Navigation Mobile (Style Application) -->
+    <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-amber-100 sm:hidden z-50 flex justify-around items-center py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+        <a href="{% url 'shop:home' %}" class="flex flex-col items-center text-gray-600 hover:text-amber-600 transition">
+            <i class="fas fa-home text-xl mb-1"></i>
+            <span class="text-[10px] uppercase font-semibold tracking-wider">Accueil</span>
+        </a>
+        <a href="{% url 'shop:products' %}" class="flex flex-col items-center text-gray-600 hover:text-amber-600 transition">
+            <i class="fas fa-search text-xl mb-1"></i>
+            <span class="text-[10px] uppercase font-semibold tracking-wider">Produits</span>
+        </a>
+        <a href="#" onclick="openSocialModal(event)" class="flex flex-col items-center text-gray-600 hover:text-amber-600 transition">
+            <i class="fas fa-share-alt text-xl mb-1"></i>
+            <span class="text-[10px] uppercase font-semibold tracking-wider">Réseaux</span>
+        </a>
+        <a href="{% url 'shop:view_cart' %}" class="flex flex-col items-center text-gray-600 hover:text-amber-600 transition relative">
+            <i class="fas fa-shopping-bag text-xl mb-1"></i>
+            <span class="text-[10px] uppercase font-semibold tracking-wider">Panier</span>
+            {% if cart_count %}
+            <span class="absolute -top-2 -right-1 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce">{{ cart_count }}</span>
+            {% endif %}
+        </a>
+        <a href="https://wa.me/{{ WHATSAPP_ADMIN_PHONE|slice:'1:' }}" target="_blank" class="flex flex-col items-center text-gray-600 hover:text-green-600 transition">
+            <i class="fab fa-whatsapp text-xl mb-1"></i>
+            <span class="text-[10px] uppercase font-semibold tracking-wider">Contact</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="mt-20" id="social-footer">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- About -->
+                <div>
+                    <h3 class="text-xl font-bold gold-accent mb-4">KAT AU PARFUM</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Découvrez notre collection exclusive de parfums et huiles de parfum de luxe.
+                    </p>
+                    <div class="social-links flex flex-wrap gap-3">
+                        <!-- WhatsApp -->
+                        <a href="https://wa.me/{{ WHATSAPP_ADMIN_PHONE|slice:'1:' }}" target="_blank" title="WhatsApp - Service Client" class="hover:bg-green-500 hover:border-green-500 hover:text-white text-green-500 border-green-500/30">
+                            <i class="fab fa-whatsapp text-lg"></i>
+                        </a>
+                        
+                        <!-- Instagram -->
+                        <a href="https://instagram.com/katoparfum?igsh=MjB0NzNneGRpZ3dq" target="_blank" title="Instagram - Galerie" class="hover:bg-pink-600 hover:border-pink-600 hover:text-white text-pink-500 border-pink-500/30">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        
+                        <!-- TikTok Publications -->
+                        <a href="https://tiktok.com/@projection.parfumerie?_r=1&_t=ZS-93j3PeYfjNt" target="_blank" title="TikTok - Nos Vidéos" class="hover:bg-black hover:border-black hover:text-white text-gray-400 border-gray-600/30 group">
+                            <i class="fab fa-tiktok text-lg"></i>
+                            <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Vidéos</span>
+                        </a>
+                        
+                        <!-- TikTok LIVE -->
+                        <a href="https://tiktok.com/@kat.au.parfum.228?_r=1&_t=ZS-93m6zaRcqCT" target="_blank" title="TikTok - LIVE" class="hover:bg-black hover:border-red-500 hover:text-white text-gray-400 border-red-500/50 group relative">
+                            <i class="fab fa-tiktok text-lg"></i>
+                            <span class="absolute top-0 right-0 flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                            </span>
+                            <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-red-600 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-bold">LIVE</span>
+                        </a>
+                        
+                        <!-- Facebook -->
+                        <a href="https://www.facebook.com/share/1MyBbjDQER/" target="_blank" title="Facebook" class="hover:bg-blue-600 hover:border-blue-600 hover:text-white text-blue-500 border-blue-500/30">
+                            <i class="fab fa-facebook text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Shop -->
+                <div>
+                    <h3 class="text-lg font-bold gold-accent mb-4">Boutique</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="{% url 'shop:products' %}">Tous les produits</a></li>
+                        <li><a href="{% url 'shop:products' %}?category=parfum">Parfums</a></li>
+                        <li><a href="{% url 'shop:products' %}?category=huile-de-parfum">Huiles de parfum</a></li>
+                        <li><a href="{% url 'shop:view_cart' %}">Mon panier</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Customer Service -->
+                <div>
+                    <h3 class="text-lg font-bold gold-accent mb-4">Service</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#">Politique de livraison</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold gold-accent mb-4">Contact</h3>
+                    <p class="text-gray-400 text-sm mb-2">
+                        <i class="fas fa-phone gold-accent mr-2"></i>
+                        <a href="tel:+22896084619">+228 96084619</a>
+                    </p>
+                    <p class="text-gray-400 text-sm mb-4">
+                        <i class="fas fa-envelope gold-accent mr-2"></i>
+                        <a href="mailto:katauparfum@gmail.com">katauparfum@gmail.com</a>
+                    </p>
+                    <p class="text-gray-400 text-sm">
+                        <i class="fas fa-map-marker-alt gold-accent mr-2"></i>
+                        Togblékopé, Lomé, Togo
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-700 pt-8">
+                <p class="text-center text-gray-400 text-sm">
+                    &copy; 2026 KATAUPARFUM. Tous droits réservés. <span class="gold-accent">💎</span>
+                </p>
+                <p class="text-center text-gray-600 text-[10px] mt-2 hover:text-gray-500 transition-colors cursor-default">
+                    Réalisé par le développeur Farid AGBOKA (+228 91135172)
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Social Media Modal (Popup) -->
+    <div id="social-modal" class="fixed inset-0 z-[2000] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeSocialModal(event)">
+        <div class="bg-white p-6 sm:p-8 rounded-xl border border-amber-400 shadow-2xl max-w-sm w-[90%] transform scale-95 transition-transform duration-300 relative" onclick="event.stopPropagation()">
+            <!-- Close Button -->
+            <button onclick="closeSocialModal()" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-bold gold-accent font-serif mb-2">Nos Réseaux</h3>
+                <p class="text-gray-500 text-sm">Rejoignez la communauté KAT AU PARFUM</p>
+            </div>
+            
+            <!-- Grid Links -->
+            <div class="grid grid-cols-3 gap-y-6 gap-x-4 justify-items-center">
+                 <!-- WhatsApp -->
+                 <a href="https://wa.me/{{ WHATSAPP_ADMIN_PHONE|slice:'1:' }}" target="_blank" class="flex flex-col items-center gap-2 group w-full">
+                    <div class="w-14 h-14 rounded-full bg-green-50 border border-green-200 flex items-center justify-center text-green-600 group-hover:bg-green-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:-translate-y-1">
+                        <i class="fab fa-whatsapp text-3xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 group-hover:text-green-600">WhatsApp</span>
+                 </a>
+
+                 <!-- Instagram -->
+                 <a href="https://instagram.com/katoparfum?igsh=MjB0NzNneGRpZ3dq" target="_blank" class="flex flex-col items-center gap-2 group w-full">
+                    <div class="w-14 h-14 rounded-full bg-pink-50 border border-pink-200 flex items-center justify-center text-pink-600 group-hover:bg-pink-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:-translate-y-1">
+                        <i class="fab fa-instagram text-3xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 group-hover:text-pink-600">Instagram</span>
+                 </a>
+
+                 <!-- Facebook -->
+                 <a href="https://www.facebook.com/share/1MyBbjDQER/" target="_blank" class="flex flex-col items-center gap-2 group w-full">
+                    <div class="w-14 h-14 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:-translate-y-1">
+                        <i class="fab fa-facebook text-3xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 group-hover:text-blue-600">Facebook</span>
+                 </a>
+
+                 <!-- TikTok Vidéos -->
+                 <a href="https://tiktok.com/@projection.parfumerie?_r=1&_t=ZS-93j3PeYfjNt" target="_blank" class="flex flex-col items-center gap-2 group w-full col-start-1 col-end-3 ml-8">
+                    <div class="w-14 h-14 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-800 group-hover:bg-black group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:-translate-y-1">
+                        <i class="fab fa-tiktok text-3xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 group-hover:text-black">Vidéos</span>
+                 </a>
+
+                 <!-- TikTok LIVE -->
+                 <a href="https://tiktok.com/@kat.au.parfum.228?_r=1&_t=ZS-93m6zaRcqCT" target="_blank" class="flex flex-col items-center gap-2 group w-full col-start-2 col-end-4 mr-8">
+                    <div class="w-14 h-14 rounded-full bg-gray-50 border border-red-200 flex items-center justify-center text-gray-800 group-hover:bg-black group-hover:text-white transition-all duration-300 shadow-sm relative group-hover:shadow-md group-hover:-translate-y-1">
+                        <i class="fab fa-tiktok text-3xl"></i>
+                        <span class="absolute top-0 right-0 flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
+                        </span>
+                    </div>
+                    <span class="text-xs font-bold text-red-600">LIVE</span>
+                 </a>
+            </div>
+            
+            <div class="mt-8 pt-4 border-t border-gray-100 text-center">
+                <p class="text-xs text-gray-400 italic">Suivez-nous pour ne rien manquer !</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Show toast notifications
+        function showToast(message, type = 'success') {
+            const toastClass = type === 'success' ? 'bg-green-600' : 'bg-red-600';
+            const toast = document.createElement('div');
+            toast.className = `toast ${toastClass}`;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s ease-in reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Update cart count
+        function updateCartCount() {
+            fetch('{% url "shop:view_cart" %}')
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    location.reload();
+                });
+        }
+        
+        // Add to cart
+        function addToCart(productId, productName) {
+            fetch('{% url "shop:add_to_cart" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    // Attendre que l'utilisateur voie le toast avant de recharger
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showToast(data.message, 'error');
+                }
+            })
+            .catch(error => showToast('Erreur: ' + error, 'error'));
+        }
+
+        // Event delegation: handle buttons with data attributes to avoid inline handlers
+        document.addEventListener('click', function(e) {
+            const addBtn = e.target.closest('.add-to-cart');
+            if (addBtn) {
+                const pid = addBtn.dataset.productId;
+                const pname = addBtn.dataset.productName || '';
+                addToCart(pid, pname);
+                return;
+            }
+        });
+
+        // Provide a global function to be used by pages if needed
+        window.addToCart = addToCart;
+        
+        // Social Modal Functions
+        function openSocialModal(e) {
+            if(e) e.preventDefault();
+            const modal = document.getElementById('social-modal');
+            modal.classList.remove('hidden');
+            // Petit délai pour permettre l'animation
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+                modal.querySelector('div').classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeSocialModal(e) {
+            if(e) e.preventDefault();
+            const modal = document.getElementById('social-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

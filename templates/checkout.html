@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load price_tags %}
+
+{% block title %}Commande - KATAUPARFUM{% endblock %}
+
+{% block content %}
+<!-- Page Hero -->
+<section class="hero-section">
+    <div class="hero-content">
+        <p class="text-amber-300 text-xs sm:text-sm tracking-widest uppercase font-semibold mb-2 sm:mb-4">
+            ✦ Finalisation ✦
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-bold mb-3 sm:mb-4">Complétez votre Commande</h1>
+        <p class="text-gray-300 text-sm sm:text-lg">Informations de livraison et de paiement</p>
+    </div>
+</section>
+
+<div class="luxury-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Checkout Form -->
+        <div class="lg:col-span-2">
+            <div class="premium-card">
+                <!-- Error Messages -->
+                {% if errors %}
+                <div class="mb-6 space-y-3">
+                    {% for error in errors %}
+                    <div class="p-4 bg-red-50 border-l-4 border-red-400 text-red-800 rounded-r-lg">
+                        <i class="fas fa-exclamation-circle mr-2 text-red-600"></i> <strong>{{ error }}</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <form method="POST" class="space-y-8">
+                    {% csrf_token %}
+                    
+                    <!-- Customer Information -->
+                    <fieldset>
+                        <legend class="text-xl font-bold text-gray-900 mb-4 pb-3 border-b-2 border-amber-300">
+                            <i class="fas fa-user gold-accent mr-2"></i> Informations Personnelles
+                        </legend>
+                        
+                        <div class="space-y-4">
+                            <!-- Full Name -->
+                            <div>
+                                <label for="full_name" class="block text-sm font-semibold gold-accent mb-2">
+                                    Nom Complet *
+                                </label>
+                                <input type="text" id="full_name" name="full_name" 
+                                       value="{{ form_data.full_name }}"
+                                       placeholder="Jean Dupont"
+                                       required class="w-full">
+                            </div>
+                            
+                            <!-- WhatsApp Phone -->
+                            <div>
+                                <label for="phone" class="block text-sm font-semibold gold-accent mb-2">
+                                    Numéro WhatsApp *
+                                </label>
+                                <input type="tel" id="phone" name="phone" 
+                                       value="{{ form_data.phone }}"
+                                       placeholder="+228 901234567"
+                                       required class="w-full">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Format: +228 ou 00228...
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Avec indicatif du pays (ex: +228901234567)
+                                </p>
+                            </div>
+                        </div>
+                    </fieldset>
+                    
+                    <!-- Delivery Information -->
+                    <fieldset>
+                        <legend class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b-2 border-amber-300">
+                            <i class="fas fa-map-marker-alt gold-accent mr-2"></i> Livraison
+                        </legend>
+                        
+                        <div class="space-y-4">
+                            <!-- Address -->
+                            <div>
+                                <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Adresse de Livraison *
+                                </label>
+                                <textarea id="address" name="address" rows="4" 
+                                          placeholder="Quartier, ville"
+                                          required class="w-full">{{ form_data.address }}</textarea>
+                            </div>
+                            
+                            <!-- Delivery Date -->
+                            <div>
+                                <label for="delivery_date" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Date de Livraison *
+                                </label>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition
+                                                  {% if form_data.delivery_date == 'today' or not form_data.delivery_date %}border-amber-300 bg-amber-50{% else %}border-gray-200 hover:border-amber-300{% endif %}">
+                                        <input type="radio" name="delivery_date" value="today" 
+                                               {% if form_data.delivery_date == 'today' or not form_data.delivery_date %}checked{% endif %}
+                                               class="w-4 h-4 mr-3">
+                                        <span class="font-semibold text-gray-900">
+                                            <i class="fas fa-clock gold-accent mr-2"></i> Aujourd'hui
+                                        </span>
+                                    </label>
+                                    
+                                    <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition
+                                                  {% if form_data.delivery_date == 'tomorrow' %}border-amber-300 bg-amber-50{% else %}border-gray-200 hover:border-amber-300{% endif %}">
+                                        <input type="radio" name="delivery_date" value="tomorrow"
+                                               {% if form_data.delivery_date == 'tomorrow' %}checked{% endif %}
+                                               class="w-4 h-4 mr-3">
+                                        <span class="font-semibold text-gray-900">
+                                            <i class="fas fa-sun gold-accent mr-2"></i> Demain
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    
+                    <!-- Submit Button -->
+                    <div class="pt-8 border-t-2 border-amber-200">
+                        <p class="text-sm text-gray-700 mb-4 flex items-center gap-2">
+                            <i class="fas fa-lock text-amber-600"></i>
+                            <span>Vous serez redirigé vers <strong>WhatsApp</strong> pour finaliser votre commande de manière <strong>sécurisée</strong>.</span>
+                        </p>
+                        <button type="submit" class="btn-luxury w-full py-3 text-lg font-bold">
+                            <i class="fas fa-check mr-2"></i> Confirmer la Commande
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Reassurance Section -->
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="premium-card text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-125 transition-transform">✓</div>
+                    <p class="text-sm font-semibold text-gray-900">Commande Sécurisée</p>
+                </div>
+                <div class="premium-card text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-125 transition-transform">💬</div>
+                    <p class="text-sm font-semibold text-gray-900">Support WhatsApp</p>
+                </div>
+                <div class="premium-card text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-125 transition-transform">🚚</div>
+                    <p class="text-sm font-semibold text-gray-900">Livraison Rapide</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Summary Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="premium-card sticky top-24 h-fit">
+                <h2 class="text-2xl font-bold gold-accent mb-6 flex items-center">
+                    <i class="fas fa-receipt mr-3"></i> Résumé
+                </h2>
+                
+                <!-- Items List -->
+                <div class="space-y-4 mb-6 pb-6 border-b-2 border-amber-200">
+                    {% for item in cart_items %}
+                    <div class="flex justify-between items-start text-sm p-3 bg-gray-50 rounded-lg border-l-4 border-amber-300">
+                        <div class="flex-grow pr-2">
+                            <p class="font-semibold text-gray-900">{{ item.product.name }}</p>
+                            <p class="text-gray-500 text-xs mt-1">×{{ item.quantity }}</p>
+                        </div>
+                        <p class="font-bold gold-accent text-right whitespace-nowrap">{{ item.subtotal|display_price }} {{ CURRENCY }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Totals -->
+                <div class="space-y-3 mb-6">
+                    <div class="flex justify-between text-gray-600 text-sm">
+                        <span class="font-medium">Sous-total:</span>
+                        <span class="font-semibold gold-accent">{{ total|display_price }} {{ CURRENCY }}</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600 text-sm">
+                        <span class="font-medium">Livraison:</span>
+                        <span class="text-amber-600 font-semibold">À calculer</span>
+                    </div>
+                </div>
+                
+                <!-- Grand Total -->
+                <div class="pt-6 border-t-2 border-amber-300">
+                    <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-900">Total:</span>
+                                <span class="text-3xl font-bold gold-accent">{{ total|display_price }} {{ CURRENCY }}</span>
+                    </div>
+                </div>
+                
+                <!-- Info Box -->
+                <div class="mt-8 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                    <p class="text-sm text-amber-900">
+                        <i class="fas fa-info-circle gold-accent mr-2"></i>
+                        <strong>Aucune inscription requise!</strong> Commande simple et rapide.
+                    </p>
+                </div>
+                
+                <!-- Back Link -->
+                <a href="{% url 'shop:view_cart' %}" class="block text-center mt-4 text-gray-600 hover:text-gray-900 font-semibold text-sm transition">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour au Panier
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

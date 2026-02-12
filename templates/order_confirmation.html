@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load price_tags %}
+
+{% block title %}Commande Confirmée - KATAUPARFUM{% endblock %}
+
+{% block content %}
+<!-- Hero Success Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <p class="text-amber-300 text-xs sm:text-sm tracking-widest uppercase font-semibold mb-2 sm:mb-4 animate-pulse">
+            ✦ Succès ✦
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-bold mb-3 sm:mb-4">Commande Confirmée!</h1>
+        <p class="text-3xl gold-accent font-semibold mb-3 sm:mb-4">Numéro: #{{ order.id }}</p>
+        <p class="text-gray-300 text-sm sm:text-lg">Merci pour votre confiance</p>
+    </div>
+</section>
+
+<!-- Divider -->
+<div class="divider-luxury"></div>
+
+<div class="luxury-section max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    
+    <!-- Order Summary and Customer Info Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- Left: Order Info -->
+        <div class="premium-card">
+            <h2 class="text-2xl font-bold gold-accent mb-6 flex items-center border-b-2 border-amber-200 pb-4">
+                <i class="fas fa-clipboard-list mr-3 text-amber-600"></i> Informations Commande
+            </h2>
+            
+            <div class="space-y-5 text-sm">
+                <div class="flex justify-between pb-3 border-b border-gray-200">
+                    <span class="font-semibold text-gray-700">N° Commande:</span>
+                    <span class="font-mono font-bold gold-accent">#{{ order.id }}</span>
+                </div>
+                
+                <div class="flex justify-between pb-3 border-b border-gray-200">
+                    <span class="font-semibold text-gray-700">Date:</span>
+                    <span class="text-gray-900 font-medium">{{ order.created_at|date:"d/m/Y à H:i" }}</span>
+                </div>
+                
+                <div class="flex justify-between pb-3 border-b border-gray-200">
+                    <span class="font-semibold text-gray-700">Total:</span>
+                    <span class="text-2xl font-bold gold-accent">{{ order.total_price|display_price }} {{ CURRENCY }}</span>
+                </div>
+                
+                <div class="flex justify-between pb-3">
+                    <span class="font-semibold text-gray-700">Livraison:</span>
+                    <span class="text-gray-900 font-medium flex items-center gap-2">
+                        {% if order.delivery_date == 'today' %}
+                        <i class="fas fa-clock gold-accent"></i> Aujourd'hui
+                        {% else %}
+                        <i class="fas fa-sun gold-accent"></i> Demain
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right: Customer Info -->
+        <div class="premium-card">
+            <h2 class="text-2xl font-bold gold-accent mb-6 flex items-center border-b-2 border-amber-200 pb-4">
+                <i class="fas fa-user mr-3 text-amber-600"></i> Vos Informations
+            </h2>
+            
+            <div class="space-y-5 text-sm">
+                <div class="border-b border-gray-200 pb-3">
+                    <p class="font-semibold text-gray-700 mb-2">👤 Nom:</p>
+                    <p class="text-gray-900 font-medium">{{ order.full_name }}</p>
+                </div>
+                
+                <div class="border-b border-gray-200 pb-3">
+                    <p class="font-semibold text-gray-700 mb-2">💬 WhatsApp:</p>
+                    <p class="text-gray-900 font-medium">{{ order.phone }}</p>
+                </div>
+                
+                <div>
+                    <p class="font-semibold text-gray-700 mb-2">📍 Adresse de Livraison:</p>
+                    <p class="text-gray-900 whitespace-pre-wrap">{{ order.address }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider-luxury my-12"></div>
+    
+    <!-- Order Items -->
+    <div class="premium-card mb-8">
+        <h2 class="text-2xl font-bold gold-accent mb-6 flex items-center border-b-2 border-amber-200 pb-4">
+            <i class="fas fa-shopping-bag mr-3 text-amber-600"></i> Produits Commandés
+        </h2>
+        
+        <div class="space-y-3">
+            {% for item in order.orderitem_set.all %}
+            <div class="flex justify-between items-center pb-4 px-4 py-3 bg-gray-50 rounded-lg border-l-4 border-amber-300">
+                <div class="flex-grow">
+                    <p class="font-semibold text-gray-900">{{ item.product.name }}</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        <span class="category-badge">{{ item.product.category.name }}</span>
+                        <span class="ml-3">Quantité: <span class="font-bold">×{{ item.quantity }}</span></span>
+                    </p>
+                </div>
+                <p class="font-bold text-lg gold-accent text-right">{{ item.price|display_price }} {{ CURRENCY }}</p>
+            </div>
+            {% endfor %}
+            
+            <div class="mt-6 pt-6 border-t-2 border-amber-300 flex justify-between items-center bg-gradient-to-r from-amber-50 to-transparent p-4 rounded-lg">
+                <span class="text-xl font-bold text-gray-900">Total:</span>
+                <span class="text-4xl font-bold gold-accent">{{ order.total_price|display_price }} {{ CURRENCY }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider-luxury my-12"></div>
+    
+    <!-- WhatsApp Message Section -->
+    <div class="premium-card border-l-4 border-green-500 mb-8">
+        <h2 class="text-2xl font-bold text-green-700 mb-6 flex items-center">
+            <i class="fab fa-whatsapp text-green-600 mr-3 text-3xl"></i> Message WhatsApp Généré
+        </h2>
+        
+        <div class="bg-gray-50 p-6 rounded-lg border-2 border-green-200 mb-6 font-mono text-xs text-gray-700 max-h-64 overflow-y-auto whitespace-pre-wrap break-words">
+            {{ message }}
+        </div>
+        
+        <a href="{{ whatsapp_url }}" target="_blank" class="btn-luxury inline-flex items-center justify-center w-full py-4 text-lg font-bold bg-green-600 border-green-600 hover:bg-green-700">
+            <i class="fab fa-whatsapp mr-3 text-2xl"></i> Envoyer sur WhatsApp
+        </a>
+        
+        <p class="text-sm text-gray-600 mt-4 text-center italic">
+            💡 Le message de votre commande est prêt à être envoyé. Cliquez pour continuer.
+        </p>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider-luxury my-12"></div>
+    
+    <!-- Next Steps -->
+    <div class="premium-card border-l-4 border-blue-500 mb-8">
+        <h3 class="text-xl font-bold gold-accent mb-6 flex items-center">
+            <i class="fas fa-list-check text-blue-600 mr-3 text-2xl"></i> Prochaines Étapes
+        </h3>
+        <ol class="space-y-4">
+            <li class="flex items-start">
+                <span class="font-bold text-blue-600 text-lg mr-4 mt-1 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">1</span>
+                <span class="text-gray-700 font-medium">Cliquez sur le bouton <strong>"Envoyer sur WhatsApp"</strong> ci-dessus</span>
+            </li>
+            <li class="flex items-start">
+                <span class="font-bold text-blue-600 text-lg mr-4 mt-1 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">2</span>
+                <span class="text-gray-700 font-medium">Le message de votre commande s'ouvrira <strong>automatiquement</strong> dans WhatsApp</span>
+            </li>
+            <li class="flex items-start">
+                <span class="font-bold text-blue-600 text-lg mr-4 mt-1 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">3</span>
+                <span class="text-gray-700 font-medium">Appuyez sur <strong>"Envoyer"</strong> pour finaliser votre commande</span>
+            </li>
+            <li class="flex items-start">
+                <span class="font-bold text-blue-600 mr-3 mt-1">4.</span>
+                <span>Vous recevrez une confirmation et les détails de livraison via WhatsApp</span>
+            </li>
+        </ol>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <a href="{% url 'shop:home' %}" class="btn-secondary text-center py-3">
+            <i class="fas fa-home mr-2"></i> Retour à l'Accueil
+        </a>
+        <a href="{% url 'shop:products' %}" class="btn-luxury text-center py-3">
+            <i class="fas fa-shopping-bag mr-2"></i> Continuer vos Achats
+        </a>
+    </div>
+    
+    <!-- Support Box -->
+    <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+        <p class="text-gray-700 mb-4">
+            <i class="fas fa-question-circle gold-accent mr-2"></i>
+            <strong>Besoin d'aide ?</strong> Contactez-nous via WhatsApp.
+        </p>
+        <a href="https://wa.me/{{ WHATSAPP_ADMIN_PHONE|slice:'1:' }}" target="_blank" class="text-green-600 font-semibold hover:text-green-700">
+            <i class="fab fa-whatsapp mr-1"></i> Contacter le Support
+        </a>
+    </div>
+</div>
+
+<style>
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-bounce {
+    animation: bounce 2s infinite;
+}
+</style>
+{% endblock %}

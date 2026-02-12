@@ -1,0 +1,178 @@
+/* KATAUPARFUM Luxury Admin Theme - V2 (Renforcé) */
+
+/* 1. FOND DE PAGE GLOBAL (Backgrounds) */
+html, body, .content-wrapper, .main-footer, .login-page, .register-page {
+    background-color: #f4ede4 !important;
+    background: linear-gradient(135deg, #faf8f3 0%, #f4ede4 100%) !important;
+    min-height: 100vh;
+}
+
+/* 2. SIDEBAR (Menu Gauche) */
+.main-sidebar {
+    background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%) !important;
+    border-right: 1px solid #d4af37;
+}
+
+.nav-sidebar .nav-item > .nav-link.active {
+    background-color: #d4af37 !important;
+    color: #000 !important;
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.4);
+}
+
+.nav-sidebar .nav-link {
+    color: #f4ede4 !important;
+}
+
+.nav-sidebar .nav-link:hover {
+    color: #d4af37 !important;
+    background: rgba(212, 175, 55, 0.1) !important;
+}
+
+/* 3. LOGO */
+.brand-link {
+    background: #000 !important;
+    border-bottom: 1px solid #d4af37 !important;
+}
+
+.brand-link .brand-text {
+    color: #d4af37 !important;
+    font-family: 'Fredoka One', sans-serif;
+}
+
+/* Logo Sidebar */
+.brand-link .brand-image {
+    max-height: 35px !important;
+    width: auto !important;
+    margin-top: -3px !important;
+}
+
+/* Logo Login Page */
+.login-logo img, .register-logo img {
+    max-height: 100px !important;
+    width: auto !important;
+    margin: 0 auto !important;
+    display: block;
+}
+
+/* 4. HEADER (Barre du haut) */
+.main-header {
+    background-color: #fff !important;
+    border-bottom: 2px solid #d4af37 !important;
+}
+
+.main-header .nav-link {
+    color: #1a1a1a !important;
+}
+
+/* 5. BOUTONS (Buttons) - FORCING STYLES */
+/* Reset de la forme générale */
+.btn {
+    border-radius: 4px !important; /* Coins légèrement arrondis */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid transparent !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+}
+
+/* Boutons Principaux (Enregistrer, Connexion) - Noir & Or */
+.btn-primary, .btn-info, .bg-info, .bg-primary {
+    background: #1a1a1a !important;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    border-color: #d4af37 !important;
+    color: #d4af37 !important;
+}
+
+.btn-primary:hover, .btn-info:hover {
+    background: #d4af37 !important;
+    color: #1a1a1a !important;
+    border-color: #1a1a1a !important;
+    transform: translateY(-1px);
+}
+
+/* Boutons Succès (Ajouter) - Or */
+.btn-success, .bg-success {
+    background: #d4af37 !important;
+    background: linear-gradient(135deg, #d4af37 0%, #b8941e 100%) !important;
+    border-color: #b8941e !important;
+    color: #1a1a1a !important;
+}
+
+.btn-success:hover {
+    background: #1a1a1a !important;
+    color: #d4af37 !important;
+}
+
+/* Boutons Secondaires (Annuler, Filtres) - Blanc */
+.btn-secondary, .btn-default {
+    background-color: #fff !important;
+    border-color: #ccc !important;
+    color: #333 !important;
+}
+
+.btn-secondary:hover, .btn-default:hover {
+    background-color: #f4f4f4 !important;
+    border-color: #d4af37 !important;
+    color: #d4af37 !important;
+}
+
+/* Boutons Danger (Supprimer) */
+.btn-danger, .bg-danger {
+    background: #8b0000 !important;
+    color: white !important;
+}
+
+/* 6. CARDS & CONTAINERS */
+.card {
+    border: none !important;
+    border-top: 3px solid #d4af37 !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05) !important;
+    border-radius: 8px !important;
+    background-color: #fff !important;
+}
+
+.card-header {
+    background-color: #fff !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+
+/* 7. TITRES & TEXTES */
+.content-header h1, h1, h2, h3, h4 {
+    color: #1a1a1a !important;
+    font-weight: 700 !important;
+}
+
+/* 8. TABLES */
+.table thead th {
+    background-color: #1a1a1a !important;
+    color: #d4af37 !important;
+    border-bottom: 2px solid #d4af37 !important;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(212, 175, 55, 0.05) !important;
+}
+
+/* 9. FORMULAIRES */
+input[type="text"], input[type="password"], input[type="email"], select, textarea {
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    padding: 8px 12px;
+    height: auto !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #d4af37 !important;
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2) !important;
+}
+
+/* 10. FOOTER */
+.main-footer {
+    background: #1a1a1a !important;
+    color: #d4af37 !important;
+    border-top: 1px solid #d4af37 !important;
+}

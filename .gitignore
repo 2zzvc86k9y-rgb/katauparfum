@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+db.sqlite3
+staticfiles/
+media/
+
+# Fichiers d'environnement (ne jamais envoyer les mots de passe)
+.env
+env/
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/

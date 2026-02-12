@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load price_tags %}
+
+{% block title %}Accueil - KATAUPARFUM{% endblock %}
+
+{% block content %}
+<!-- Hero Section - Premium -->
+<section class="hero-section">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-4 sm:top-8 right-4 sm:right-10 text-4xl sm:text-5xl animate-pulse">💎</div>
+        <div class="absolute bottom-8 sm:bottom-12 left-4 sm:left-10 text-3xl sm:text-4xl animate-pulse" style="animation-delay: 1s;">✨</div>
+    </div>
+    <div class="hero-content">
+        <p class="text-amber-300 text-xs sm:text-sm tracking-widest uppercase font-semibold mb-2 sm:mb-4">
+            ✦ Bienvenue chez ✦
+        </p>
+        <img src="/static/img/logo.png" alt="KATAUPARFUM" class="logo-img mx-auto mb-1 sm:mb-1 h-48 sm:h-80">
+        <p class="hero-section p">
+            Retrouvez la signature olfactive de vos parfums de créateurs préférés. 
+            Nos essences sont des <strong>inspirations fidèles</strong> offrant la même intensité et tenue que les grandes maisons, 
+            pour un luxe enfin accessible.
+        </p>
+        <p class="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-10 max-w-2xl mx-auto px-4 leading-relaxed">
+            L'Excellence des Grandes Marques • Inspirations & Dupes de Luxe
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <a href="{% url 'shop:products' %}" class="btn-luxury text-center text-sm sm:text-base py-2 sm:py-3">
+                Découvrir la Collection
+            </a>
+            <a href="#featured" class="btn-secondary text-center text-sm sm:text-base py-2 sm:py-3">
+                Voir Plus
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Divider -->
+<div class="divider-luxury"></div>
+
+<!-- Categories Section - Premium -->
+<section class="py-12 sm:py-16 premium-section luxury-pattern">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-12">
+            <p class="text-amber-600 text-sm tracking-widest uppercase font-semibold mb-2">Collections</p>
+            <h2 class="section-title">Nos Catégories Exclusives</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {% for category in categories %}
+            <a href="{% url 'shop:products' %}?category={{ category.slug }}" 
+               class="premium-card group">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-2xl font-bold gold-accent">{{ category.name }}</h3>
+                    <span class="text-5xl group-hover:scale-125 transition-transform duration-300">
+                        {% if 'oud' in category.slug %}🌳{% elif 'floral' in category.slug %}🌸{% else %}✨{% endif %}
+                    </span>
+                </div>
+                <p class="text-gray-600 text-sm">
+                    {{ category.name|upper }} <span class="gold-line"></span> Premium Selection
+                </p>
+                <p class="text-gray-500 mt-3">
+                    {{ category.products.count }} produit{{ category.products.count|pluralize }}
+                </p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Divider -->
+<div class="divider-luxury"></div>
+
+<!-- Featured Products Section -->
+<section id="featured" class="py-12 sm:py-16 premium-section">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-12">
+            <p class="text-amber-600 text-sm tracking-widest uppercase font-semibold mb-2">Sélection</p>
+            <h2 class="section-title">Produits Vedettes</h2>
+        </div>
+        
+        {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for product in products %}
+            <div class="premium-card p-0 overflow-hidden">
+                <!-- Image Container -->
+                <div class="relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 h-80">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover product-image hover:scale-110 transition-transform duration-500">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-gray-200 to-gray-300">
+                        💎
+                    </div>
+                    {% endif %}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="absolute top-4 left-4">
+                        <span class="category-badge">{{ product.category.name }}</span>
+                    </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                        {{ product.name }}
+                    </h3>
+                    
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2 h-10">
+                        {{ product.description }}
+                    </p>
+                    
+                    <!-- Divider -->
+                    <div class="divider-luxury opacity-50 mb-4"></div>
+                    
+                    <!-- Price & Status -->
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="price-tag text-2xl">{{ product.price|display_price }} {{ CURRENCY }}</span>
+                        {% if product.is_available %}
+                        <span class="text-green-600 text-xs font-bold uppercase tracking-wide">✓ Stock</span>
+                        {% else %}
+                        <span class="text-red-600 text-sm font-semibold">✗ Rupture</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Button -->
+                        {% if product.is_available %}
+                        <button data-product-id="{{ product.id }}" data-product-name="{{ product.name|escapejs }}" 
+                                class="btn-luxury w-full text-center block add-to-cart font-semibold">
+                            <i class="fas fa-shopping-bag mr-2"></i> Ajouter au Panier
+                        </button>
+                    {% else %}
+                    <button disabled class="w-full py-2 bg-gray-300 text-gray-600 rounded-lg font-semibold cursor-not-allowed">
+                        Indisponible
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'shop:products' %}" class="btn-luxury inline-block">
+                Voir Tous les Produits <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <p class="text-gray-600 text-lg mb-6">Aucun produit disponible pour le moment.</p>
+            <a href="{% url 'shop:products' %}" class="btn-luxury inline-block">
+                Retour aux Produits
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Divider -->
+<div class="divider-luxury"></div>
+
+<!-- Why Us Section -->
+<section class="py-12 sm:py-16 luxury-pattern">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-12">
+            <p class="text-amber-600 text-sm tracking-widest uppercase font-semibold mb-2">Avantages</p>
+            <h2 class="section-title">Pourquoi Nous Choisir ?</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="premium-card text-center group">
+                <div class="text-6xl gold-accent mb-4 group-hover:scale-125 transition-transform">✓</div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Produits Premium</h3>
+                <p class="text-gray-600 text-sm">
+                    Sélection exclusive de parfums et huiles de luxe
+                </p>
+            </div>
+            
+            <div class="premium-card text-center group">
+                <div class="text-6xl gold-accent mb-4 group-hover:scale-125 transition-transform">🛵📦</div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Livraison Rapide</h3>
+                <p class="text-gray-600 text-sm">
+                    Aujourd'hui ou demain selon votre choix
+                </p>
+            </div>
+            
+            <div class="premium-card text-center group">
+                <div class="text-6xl gold-accent mb-4 group-hover:scale-125 transition-transform">💬</div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Support Direct</h3>
+                <p class="text-gray-600 text-sm">
+                    Contactez-nous facilement via WhatsApp
+                </p>
+            </div>
+            
+            <div class="premium-card text-center group">
+                <div class="text-6xl gold-accent mb-4 group-hover:scale-125 transition-transform">🔐</div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Commande Simple</h3>
+                <p class="text-gray-600 text-sm">
+                    Sans inscription, rapide et sécurisé
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="luxury-gradient text-white py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+            Prêt à Sentir la Différence ?
+        </h2>
+        <p class="text-lg text-gray-300 mb-8">
+            Explorez notre collection exclusive et trouvez votre parfum idéal.
+        </p>
+        <a href="{% url 'shop:products' %}" class="btn-luxury inline-block">
+            Commencer vos Achats <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+    </div>
+</section>
+{% endblock %}
