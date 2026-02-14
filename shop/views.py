@@ -3,11 +3,12 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from django.conf import settings
+from django.contrib import messages
 import urllib.parse
 import json
 from decimal import Decimal
 
-from .models import Category, Product, Order, OrderItem
+from .models import Category, Product, Order, OrderItem, Review
 
 
 def get_cart_from_session(request):
@@ -58,6 +59,23 @@ def products(request):
     product_id = request.GET.get('product_id', None)
     query = request.GET.get('q', '').strip()
     
+    # Traitement du formulaire d'avis (POST)
+    if request.method == 'POST' and 'submit_review' in request.POST:
+        try:
+            r_product_id = request.POST.get('product_id')
+            r_author = request.POST.get('author')
+            r_rating = request.POST.get('rating')
+            r_text = request.POST.get('text')
+            
+            if r_product_id and r_author and r_rating and r_text:
+                prod = get_object_or_404(Product, id=r_product_id)
+                Review.objects.create(product=prod, author=r_author, rating=int(r_rating), text=r_text)
+                messages.success(request, "Merci ! Votre avis a été ajouté avec succès. 💎")
+                return redirect(f"{request.path}?product_id={r_product_id}")
+        except Exception as e:
+            messages.error(request, "Une erreur est survenue lors de l'ajout de l'avis.")
+
+    # Logique d'affichage normale (GET)
     products_qs = Product.objects.filter(is_available=True)
 
     # Liste complète pour la sidebar (A-Z)

@@ -115,3 +115,18 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} × {self.quantity}"
+
+
+class Review(models.Model):
+    """Avis clients sur les produits"""
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    author = models.CharField(max_length=100, verbose_name="Nom du client")
+    rating = models.PositiveSmallIntegerField(default=5, verbose_name="Note (1-5)")
+    text = models.TextField(verbose_name="Commentaire")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.author} sur {self.product.name} ({self.rating}/5)"

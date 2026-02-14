@@ -77,7 +77,7 @@
         .product-image {
             height: 100%; /* Remplit toute la hauteur du cadre (320px) */
             width: 100%;
-            object-fit: contain; /* Affiche l'image ENTIÈRE sans jamais couper */
+            object-fit: cover; /* Remplit tout le cadre pour un effet immersif */
             padding: 0;
             background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
             transition: transform 0.7s ease; /* Animation lente et fluide */
@@ -385,7 +385,6 @@
 
         .hero-section p {
             font-size: 16px;
-            color: #d4af37;
             margin-bottom: 16px;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             font-style: italic;
@@ -661,7 +660,8 @@
                             <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Vidéos</span>
                         </a>
                         
-                        <!-- TikTok LIVE -->
+                        <!-- 
+                        TikTok LIVE (désactivé temporairement)
                         <a href="https://tiktok.com/@kat.au.parfum.228?_r=1&_t=ZS-93m6zaRcqCT" target="_blank" title="TikTok - LIVE" class="hover:bg-black hover:border-red-500 hover:text-white text-gray-400 border-red-500/50 group relative">
                             <i class="fab fa-tiktok text-lg"></i>
                             <span class="absolute top-0 right-0 flex h-2.5 w-2.5">
@@ -670,6 +670,7 @@
                             </span>
                             <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-red-600 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-bold">LIVE</span>
                         </a>
+                        -->
                         
                         <!-- Facebook -->
                         <a href="https://www.facebook.com/share/1MyBbjDQER/" target="_blank" title="Facebook" class="hover:bg-blue-600 hover:border-blue-600 hover:text-white text-blue-500 border-blue-500/30">
@@ -778,7 +779,8 @@
                     <span class="text-xs font-medium text-gray-600 group-hover:text-black">Vidéos</span>
                  </a>
 
-                 <!-- TikTok LIVE -->
+                 <!-- 
+                 TikTok LIVE (désactivé temporairement)
                  <a href="https://tiktok.com/@kat.au.parfum.228?_r=1&_t=ZS-93m6zaRcqCT" target="_blank" class="flex flex-col items-center gap-2 group w-full col-start-2 col-end-4 mr-8">
                     <div class="w-14 h-14 rounded-full bg-gray-50 border border-red-200 flex items-center justify-center text-gray-800 group-hover:bg-black group-hover:text-white transition-all duration-300 shadow-sm relative group-hover:shadow-md group-hover:-translate-y-1">
                         <i class="fab fa-tiktok text-3xl"></i>
@@ -789,6 +791,7 @@
                     </div>
                     <span class="text-xs font-bold text-red-600">LIVE</span>
                  </a>
+                 -->
             </div>
             
             <div class="mt-8 pt-4 border-t border-gray-100 text-center">

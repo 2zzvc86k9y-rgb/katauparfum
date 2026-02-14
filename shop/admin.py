@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Order, OrderItem
+from .models import Category, Product, Order, OrderItem, Review
 
 
 @admin.register(Category)
@@ -84,3 +84,10 @@ class OrderAdmin(admin.ModelAdmin):
     
     get_whatsapp_link.short_description = '📱 WhatsApp'
     get_whatsapp_link.allow_tags = True
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ['product', 'author', 'rating', 'created_at']
+    list_filter = ['rating', 'created_at', 'product']
+    search_fields = ['author', 'text', 'product__name']

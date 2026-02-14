@@ -165,10 +165,10 @@ WHATSAPP_ADMIN_PHONE = '+22896084619'
 # ========================================
 JAZZMIN_SETTINGS = {
     # Titre et branding
-    "site_title": "KATAUPARFUM",
-    "site_header": "💎 KATAUPARFUM - Admin",
-    "site_brand": "KATAUPARFUM",
-    "welcome_sign": "Bienvenue à l'Administration Luxe KATAUPARFUM 💎",
+    "site_title": "KAT AU PARFUM",
+    "site_header": "💎 KAT AU PARFUM - Admin",
+    "site_brand": "KAT AU PARFUM",
+    "welcome_sign": "Bienvenue à l'Administration Luxe KAT AU PARFUM 💎",
     
     # Icônes & Logos
     "site_logo": "img/logo.png",
