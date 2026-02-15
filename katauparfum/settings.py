@@ -35,6 +35,9 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS = [f'https://{RENDER_EXTERNAL_HOSTNAME}']
 
+# Indispensable pour Render : permet à Django de savoir qu'il est en HTTPS derrière le proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # Application definition
 
@@ -171,7 +174,7 @@ SESSION_COOKIE_AGE = 2592000  # 30 days
 SESSION_COOKIE_HTTPONLY = True
 
 # Security (adjust for production)
-CSRF_TRUSTED_ORIGINS = []
+# CSRF_TRUSTED_ORIGINS = []
 
 # WhatsApp Configuration
 WHATSAPP_ADMIN_PHONE = '+22896084619'
