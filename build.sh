@@ -6,7 +6,7 @@ set -o errexit
 pip install -r requirements.txt
 
 # Collecter les fichiers statiques (CSS, Images)
-python manage.py collectstatic --no-input
+python manage.py collectstatic --no-input --clear
 
 # Mettre à jour la base de données
 python manage.py migrate

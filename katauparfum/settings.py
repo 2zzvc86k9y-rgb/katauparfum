@@ -140,7 +140,7 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
@@ -216,7 +216,7 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": True,
     
     # CSS personnalisé
-    "custom_css": None,
+    # "custom_css": None,  <-- On laisse par défaut pour éviter les erreurs 404
     "custom_js": None,
     
     # Related Modal
@@ -247,4 +247,4 @@ JAZZMIN_UI_TWEAKS = {
 }
 
 # CSS personnalisé luxe KATAUPARFUM pour Jazzmin
-JAZZMIN_SETTINGS["custom_css"] = "css/jazzmin_custom.css"
+# JAZZMIN_SETTINGS["custom_css"] = "css/jazzmin_custom.css"
