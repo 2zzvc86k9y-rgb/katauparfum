@@ -177,8 +177,6 @@ function updateQuantity(productId, quantity) {
 }
 
 function removeFromCart(productId) {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
-    
     fetch('{% url "shop:remove_from_cart" %}', {
         method: 'POST',
         headers: {
