@@ -163,9 +163,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Configuration Cloudinary (Images produits)
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', "").strip(),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', "").strip(),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', "").strip(),
 }
 
 # Session configuration

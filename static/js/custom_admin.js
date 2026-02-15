@@ -25,6 +25,28 @@ document.addEventListener("DOMContentLoaded", function() {
     // 2. S'assurer que les "Collaps" (Fieldsets des produits) sont cliquables
     const collapseToggles = document.querySelectorAll('a[data-toggle="collapse"]');
     collapseToggles.forEach(function(toggle) {
-        toggle.setAttribute('href', '#');
+        // FIX: On ne touche PAS au href ici, car il contient l'ID de la section à ouvrir !
+        
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault(); // Empêche le saut en haut de page
+            
+            // Fallback manuel : Si Bootstrap ne gère pas le clic, on le fait nous-mêmes
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId.startsWith('#')) {
+                const target = document.querySelector(targetId);
+                if (target) {
+                    // On bascule manuellement la classe 'show' pour afficher/masquer
+                    // Cela garantit le fonctionnement même si le JS de Jazzmin a un conflit
+                    const isVisible = target.classList.contains('show');
+                    if (isVisible) {
+                        target.classList.remove('show');
+                        this.classList.add('collapsed');
+                    } else {
+                        target.classList.add('show');
+                        this.classList.remove('collapsed');
+                    }
+                }
+            }
+        });
     });
 });
