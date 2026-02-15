@@ -49,4 +49,34 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
+
+    // 3. Gestion des Tabs (Onglets) pour Jazzmin (ex: #description-image-tab)
+    const tabToggles = document.querySelectorAll('a[data-toggle="tab"], a[data-toggle="pill"]');
+    tabToggles.forEach(function(toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // 1. Gérer la classe active sur les onglets
+            const nav = this.closest('.nav');
+            if (nav) {
+                nav.querySelectorAll('.nav-link.active').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+            }
+            
+            // 2. Gérer l'affichage du contenu
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId.startsWith('#')) {
+                const target = document.querySelector(targetId);
+                if (target) {
+                    const tabContent = target.closest('.tab-content');
+                    if (tabContent) {
+                        tabContent.querySelectorAll('.tab-pane.active').forEach(el => {
+                            el.classList.remove('active', 'show');
+                        });
+                    }
+                    target.classList.add('active', 'show');
+                }
+            }
+        });
+    });
 });
