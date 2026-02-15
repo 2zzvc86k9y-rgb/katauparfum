@@ -237,8 +237,8 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": True,
     
     # CSS personnalisé
-    # "custom_css": None,  <-- On laisse par défaut pour éviter les erreurs 404
-    "custom_js": None,
+    "custom_css": "css/jazzmin_custom.css",
+    "custom_js": "js/custom_admin.js",
     
     # Related Modal
     "related_modal_active": True,
@@ -266,6 +266,3 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
 }
-
-# CSS personnalisé luxe KATAUPARFUM pour Jazzmin
-# JAZZMIN_SETTINGS["custom_css"] = "css/jazzmin_custom.css"

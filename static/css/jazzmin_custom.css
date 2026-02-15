@@ -176,3 +176,21 @@ input:focus, select:focus, textarea:focus {
     color: #d4af37 !important;
     border-top: 1px solid #d4af37 !important;
 }
+
+/* ==========================================
+   CORRECTIFS FONCTIONNELS (DROPDOWNS & CLICS)
+   ========================================== */
+/* Correctif pour l'affichage des dropdowns dans l'admin */
+.dropdown-menu.show {
+    display: block !important;
+}
+
+/* Curseur main sur les éléments cliquables */
+.nav-link, .dropdown-toggle {
+    cursor: pointer;
+}
+
+/* Force le curseur sur les titres de fieldsets repliables */
+a[data-toggle="collapse"] {
+    cursor: pointer !important;
+}
