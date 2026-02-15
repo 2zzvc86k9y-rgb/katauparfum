@@ -213,3 +213,22 @@ a[data-toggle="collapse"] {
     margin-right: 10px !important;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
 }
+
+/* ==========================================
+   CORRECTIF PAGE DE SUPPRESSION
+   ========================================== */
+/* Force l'apparence du bouton de confirmation s'il n'a pas les classes Bootstrap */
+.delete-confirmation input[type="submit"],
+.delete-confirmation button[type="submit"] {
+    background-color: #8b0000 !important;
+    color: #ffffff !important;
+    border: 1px solid #8b0000 !important;
+    padding: 10px 20px !important;
+    border-radius: 4px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    margin-right: 10px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+}
