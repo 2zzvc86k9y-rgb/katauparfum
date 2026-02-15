@@ -146,6 +146,9 @@ STORAGES = {
     },
 }
 
+# Empêcher le plantage si un fichier source map est manquant (ex: Jazzmin bootstrap.map)
+WHITENOISE_MANIFEST_STRICT = False
+
 # ⚠️ COMPATIBILITÉ DJANGO 6.0 : Ces réglages sont requis par la librairie Cloudinary
 # qui cherche encore les anciennes variables supprimées dans Django 5+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
