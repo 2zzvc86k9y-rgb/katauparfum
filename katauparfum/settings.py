@@ -146,6 +146,11 @@ STORAGES = {
     },
 }
 
+# ⚠️ COMPATIBILITÉ DJANGO 6.0 : Ces réglages sont requis par la librairie Cloudinary
+# qui cherche encore les anciennes variables supprimées dans Django 5+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
 # Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
