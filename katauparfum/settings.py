@@ -172,7 +172,7 @@ CLOUDINARY_STORAGE = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 2592000  # 30 days
 SESSION_COOKIE_HTTPONLY = True
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 # Security (adjust for production)
 # CSRF_TRUSTED_ORIGINS = []
