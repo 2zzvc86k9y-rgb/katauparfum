@@ -39,6 +39,8 @@ if RENDER_EXTERNAL_HOSTNAME:
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',  # Gestion stockage Cloudinary
+    'cloudinary',          # Librairie Cloudinary
     'jazzmin',  # Django Jazzmin - Admin luxe & moderne
     'django.contrib.admin',
     'django.contrib.auth',
@@ -137,7 +139,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # Gestion des fichiers statiques en production (WhiteNoise)
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
@@ -147,6 +149,13 @@ STORAGES = {
 # Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Configuration Cloudinary (Images produits)
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
 
 # Session configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
