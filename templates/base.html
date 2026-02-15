@@ -803,7 +803,6 @@
 
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'js/shop.js' %}"></script>
     <script>
         // Show toast notifications
         function showToast(message, type = 'success') {
@@ -819,19 +818,48 @@
             }, 3000);
         }
         
-        // Update cart count
-        function updateCartCount() {
-            fetch('{% url "shop:view_cart" %}')
-                .then(response => response.text())
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    location.reload();
-                });
+        // Update cart badge dynamically
+        function updateCartBadge(count) {
+            // 1. Badge Desktop
+            const desktopWrapper = document.querySelector('.cart-icon-wrapper');
+            if (desktopWrapper) {
+                let badge = desktopWrapper.querySelector('.cart-badge');
+                if (count > 0) {
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className = 'cart-badge';
+                        desktopWrapper.appendChild(badge);
+                    }
+                    badge.textContent = count;
+                    badge.style.display = 'flex';
+                } else if (badge) {
+                    badge.style.display = 'none';
+                }
+            }
+
+            // 2. Badge Mobile
+            const mobileLinks = document.querySelectorAll('a[href*="cart"]');
+            mobileLinks.forEach(link => {
+                // On cible le lien du footer mobile (qui a flex-col)
+                if (link.classList.contains('flex-col')) {
+                    let badge = link.querySelector('span.absolute');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'absolute -top-2 -right-1 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce';
+                            link.appendChild(badge);
+                        }
+                        badge.textContent = count;
+                        badge.style.display = 'inline-block';
+                    } else if (badge) {
+                        badge.style.display = 'none';
+                    }
+                }
+            });
         }
         
         // Add to cart
-        function addToCart(productId, productName) {
+        function addToCart(productId, productName, btnElement) {
             fetch('{% url "shop:add_to_cart" %}', {
                 method: 'POST',
                 headers: {
@@ -847,10 +875,15 @@
             .then(data => {
                 if (data.success) {
                     showToast(data.message, 'success');
-                    // Attendre que l'utilisateur voie le toast avant de recharger
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
+                    updateCartBadge(data.cart_count);
+                    
+                    // Feedback visuel sur le bouton (optionnel)
+                    if (btnElement) {
+                        const originalHTML = btnElement.innerHTML;
+                        // On change brièvement le texte si c'est possible
+                        // btnElement.innerHTML = '<i class="fas fa-check"></i>';
+                        // setTimeout(() => btnElement.innerHTML = originalHTML, 2000);
+                    }
                 } else {
                     showToast(data.message, 'error');
                 }
@@ -860,12 +893,14 @@
 
         // Event delegation: handle buttons with data attributes to avoid inline handlers
         document.addEventListener('click', function(e) {
-            const addBtn = e.target.closest('.add-to-cart');
+            // On capture tous les types de boutons d'ajout
+            const addBtn = e.target.closest('.add-to-cart, .add-to-cart-btn, .btn-add-cart');
             if (addBtn) {
-                const pid = addBtn.dataset.productId;
+                e.preventDefault(); // 🛑 Empêche le rechargement
+                e.stopPropagation();
+                const pid = addBtn.dataset.productId || addBtn.value;
                 const pname = addBtn.dataset.productName || '';
-                addToCart(pid, pname);
-                return;
+                addToCart(pid, pname, addBtn);
             }
         });
 
