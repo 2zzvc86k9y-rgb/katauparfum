@@ -145,7 +145,7 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 
@@ -154,7 +154,7 @@ WHITENOISE_MANIFEST_STRICT = False
 
 # ⚠️ COMPATIBILITÉ DJANGO 6.0 : Ces réglages sont requis par la librairie Cloudinary
 # qui cherche encore les anciennes variables supprimées dans Django 5+
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Media files (uploads)
